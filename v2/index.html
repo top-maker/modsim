@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#modsim" class="md-skip">
+        <a href="#modsim-v2-development-source" class="md-skip">
           Skip to content
         </a>
       
@@ -322,10 +322,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#run-the-default-simulator" class="md-nav__link">
+  <a href="#start-a-managed-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run the default simulator
+        Start a managed deployment
       
     </span>
   </a>
@@ -333,10 +333,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#transports-and-options" class="md-nav__link">
+  <a href="#unconfigured-demo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transports and options
+        Unconfigured demo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#more-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        More information
       
     </span>
   </a>
@@ -385,6 +396,33 @@
   
   
     <li class="md-nav__item">
+      <a href="managed-deployments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managed deployments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="modules/" class="md-nav__link">
         
   
@@ -393,60 +431,6 @@
     
   
     Modules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="preview-notes/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Preview notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="release-process/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Preview release process
   
 
     
@@ -486,10 +470,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#run-the-default-simulator" class="md-nav__link">
+  <a href="#start-a-managed-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run the default simulator
+        Start a managed deployment
       
     </span>
   </a>
@@ -497,10 +481,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#transports-and-options" class="md-nav__link">
+  <a href="#unconfigured-demo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transports and options
+        Unconfigured demo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#more-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        More information
       
     </span>
   </a>
@@ -527,33 +522,36 @@
   
 
 
-<h1 id="modsim">modsim<a class="headerlink" href="#modsim" title="Permanent link">&para;</a></h1>
-<p>Modsim is a Modbus simulator for local development and integration with
-<a href="https://github.com/top-maker/modpoll">modpoll</a>. Its default datastore contains
-coils, discrete inputs, holding registers and input registers. All Unit IDs
-share that datastore. A public Modbus TCP simulator is available at
-<code>modsim.topmaker.net:502</code> for quick testing.</p>
-<h2 id="run-the-default-simulator">Run the default simulator<a class="headerlink" href="#run-the-default-simulator" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">pip install modsim
-modsim --comm tcp --port 5020
-</code></pre>
-<p>Alternatively, start the published container:</p>
-<pre><code class="language-bash">docker run --rm -p 5020:5020 topmaker/modsim:latest
-</code></pre>
-<p>The default TCP listener uses port 5020. Coils and holding registers are
-writable; discrete inputs and input registers are read-only. Unsupported
-addresses return a Modbus exception.</p>
-<h2 id="transports-and-options">Transports and options<a class="headerlink" href="#transports-and-options" title="Permanent link">&para;</a></h2>
-<p>TCP and UDP use socket framing; UDP listens on loopback. TLS uses TLS framing
-and expects <code>examples/certificates/pymodbus.crt</code> and <code>pymodbus.key</code> relative
-to the working directory. The TLS server does not authenticate clients. Serial
-supports RTU and ASCII framing; physical serial devices have not been
-validated in the local regression suite.</p>
-<p>Only the sequential datastore is implemented. The CLI rejects non-default
-<code>--store</code> values and the unsupported <code>--slaves</code> and <code>--context</code> options. Run
-<code>modsim --help</code> for the full option list.</p>
-<p>The local TCP, UDP and temporary-certificate TLS tests cover startup, reads and
-shutdown. SIGINT and SIGTERM handling on Windows has not been verified.</p>
+<h1 id="modsim-v2-development-source">modsim v2 development source<a class="headerlink" href="#modsim-v2-development-source" title="Permanent link">&para;</a></h1>
+<p>modsim runs simulated Modbus devices for development and integration testing.
+The current source supports profile 0.2 TM/TD input, scenarios and independent
+devices on a single managed Modbus TCP listener. The published <code>2.0.0a1</code>
+preview does not include all current managed commands; see
+<a href="https://github.com/top-maker/modsim/blob/v2/docs/preview-notes.md">preview notes</a>.</p>
+<h2 id="start-a-managed-deployment">Start a managed deployment<a class="headerlink" href="#start-a-managed-deployment" title="Permanent link">&para;</a></h2>
+<p>From a source checkout, <code>docker compose up -d --build</code> runs the root
+<code>examples/deployment.yaml</code>. Unit 1 is a virtual ADAM-5017UH input module and Unit 2 is a
+virtual ADAM-6024 with synthetic I/O loopback. Compose publishes port 5020 on
+host loopback. The ADAM mappings are manual-derived candidates; simulation is
+not evidence of physical device behavior.</p>
+<p>To run locally with uv, use <code>uv run modsim up</code>. The default deployment
+binds all host interfaces when run directly. See <a href="managed-deployments/">managed deployments</a>
+for updates, logging, TD export, instance IDs and script permissions.</p>
+<h2 id="unconfigured-demo">Unconfigured demo<a class="headerlink" href="#unconfigured-demo" title="Permanent link">&para;</a></h2>
+<p><code>modsim --comm tcp --port 5020</code> starts the legacy demonstration datastore; all
+Unit IDs share its four Modbus tables. TCP and UDP use socket framing; UDP
+listens on loopback. TLS uses <code>certificates/pymodbus.crt</code> and
+<code>certificates/pymodbus.key</code> relative to the working directory. It does not
+authenticate clients. Serial supports RTU and ASCII; physical serial hardware
+has not been validated by the local regression suite.</p>
+<p>The CLI rejects non-default <code>--store</code> and the unsupported <code>--slaves</code> and
+<code>--context</code> options. Run <code>modsim --help</code> for available options.</p>
+<h2 id="more-information">More information<a class="headerlink" href="#more-information" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="model-validation/">Model-driven simulation</a>: TM/TD, codecs and scenarios.</li>
+<li><a href="managed-deployments/">Managed deployments</a>: YAML, lifecycle and export.</li>
+<li><a href="modules/">Modules</a>: API reference.</li>
+</ul>
 
 
 

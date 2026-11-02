@@ -18,7 +18,7 @@
         <link rel="prev" href="..">
       
       
-        <link rel="next" href="../modules/">
+        <link rel="next" href="../managed-deployments/">
       
       
         
@@ -362,10 +362,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#multiple-devices-on-one-listener" class="md-nav__link">
+  <a href="#managed-deployments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multiple devices on one listener
+        Managed deployments
       
     </span>
   </a>
@@ -409,6 +409,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../managed-deployments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managed deployments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../modules/" class="md-nav__link">
         
   
@@ -417,60 +444,6 @@
     
   
     Modules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../preview-notes/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Preview notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../release-process/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Preview release process
   
 
     
@@ -521,10 +494,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#multiple-devices-on-one-listener" class="md-nav__link">
+  <a href="#managed-deployments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multiple devices on one listener
+        Managed deployments
       
     </span>
   </a>
@@ -574,13 +547,13 @@
 
 
 <h1 id="model-driven-simulation">Model-driven simulation<a class="headerlink" href="#model-driven-simulation" title="Permanent link">&para;</a></h1>
-<p>The v2 source uses the published, exact <code>modpoll-wot==0.2.0a1</code> dependency.
-Install with <code>poetry install</code>. Model parsing and TM instantiation belong to that
+<p>The v2 source uses the published, exact <code>modpoll-wot==0.2.0a2</code> dependency.
+Install with <code>uv sync --all-groups</code>. Model parsing and TM instantiation belong to that
 shared package; Modsim owns state and protocol execution.</p>
 <h2 id="one-device">One device<a class="headerlink" href="#one-device" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">poetry run modsim --config contrib/advantech/adam-5017uh/adam-5017uh-slot-0.tm.json \
+<pre><code class="language-bash">uv run modsim --config examples/models/advantech/adam-5017uh/adam-5017uh.tm.json \
   --unit-id 1 --port 5020 \
-  --scenario contrib/advantech/adam-5017uh/temperature.sim.json
+  --scenario examples/models/advantech/adam-5017uh/simulation/adam-5017uh.sim.json
 </code></pre>
 <p><code>--config</code> also accepts HTTPS model URLs. GitHub <code>blob</code> links are converted to
 raw file URLs. Prefer a tag or commit SHA for repeatable runs; branch URLs change.
@@ -607,24 +580,16 @@ NUL (consumers strip trailing NULs). Physical bit arrays have their declared
 length. Legacy register bool arrays retain the consumer's byte/LSB layout and
 preserve unused padding. No engineering-unit conversion is guessed for raw ADAM
 channels. Profile 0.2 is required; the unconfigured demonstration is unchanged.</p>
-<h2 id="multiple-devices-on-one-listener">Multiple devices on one listener<a class="headerlink" href="#multiple-devices-on-one-listener" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">poetry run modsim --deployment examples/lab.sim.json
+<h2 id="managed-deployments">Managed deployments<a class="headerlink" href="#managed-deployments" title="Permanent link">&para;</a></h2>
+<p>For repeatable startup and runtime updates, use deployment version 2 and
+<code>modsim up</code>. See <a href="../managed-deployments/">managed deployments</a> for the YAML
+contract, TM parameters, dynamic device lifecycle and TD export.
+The ADAM lab example starts two independent devices on one listener:</p>
+<pre><code class="language-bash">uv run modsim up -f examples/deployment.yaml
 </code></pre>
-<p>Deployment version <code>"1"</code> has one optional <code>server</code> object and a nonempty <code>devices</code>
-list. Server fields are <code>comm</code> (currently <code>tcp</code>), <code>bind</code> (default <code>127.0.0.1</code>) and
-<code>port</code> (default <code>5020</code>). <code>--bind</code> and <code>--port</code> override these listener settings.
-Each device requires unique <code>name</code> and <code>unitId</code> (1–254), plus <code>model</code> (local path
-or HTTPS URL). Optional fields: <code>scenario</code>, <code>script</code>, <code>initial</code>, <code>parameters</code>.
-Parameters instantiate model placeholders. A concrete TD with a conflicting
-Unit ID is rejected by the shared interpreter. A TD's remote endpoint never
-selects the listener bind address.</p>
-<p>Deployment files are local. Relative model/scenario/script paths are resolved
-against the deployment directory. Script paths inside a scenario are relative to
-that scenario. CLI paths are relative to the working directory. Device state,
-script module state and random generators are independent even when the same TM
-is instantiated repeatedly. Duplicate names/Unit IDs, unsupported fields and
-invalid initial values fail before the listener opens. Unconfigured Unit IDs
-return an error and never inherit another device's state.</p>
+<p>Paths in deployment files are relative to the deployment directory; scenario
+script paths are relative to the scenario file. Unit IDs and TD identities must
+be unique. Unknown addresses or Unit IDs never inherit another device's state.</p>
 <h2 id="scenarios">Scenarios<a class="headerlink" href="#scenarios" title="Permanent link">&para;</a></h2>
 <p>Version <code>"1"</code> fields:</p>
 <table>
@@ -678,10 +643,10 @@ Boolean channels can use constant values, bindings or scripts. All updates must
 satisfy the model's schema and raw encoding bounds. Unknown properties are errors.
 Binding chains and cycles are rejected; use a script for ordered dependencies.</p>
 <p>Initialization order: model defaults/type fallback → scenario initial →
-deployment/CLI initial → script <code>initialize</code> → first dynamic update at elapsed 0.
-<code>--initial</code> and <code>--initial-file</code> remain available for single-device runs. Startup
-logs include the final initialized values; raw values are synthetic unless the
-contribution explicitly documents their source.</p>
+CLI initial → script <code>initialize</code> → first dynamic update at elapsed 0.
+<code>--initial</code> and <code>--initial-file</code> remain available for single-device runs.
+Single-device startup logs include the final initialized values; raw values are
+synthetic unless the contribution explicitly documents their source.</p>
 <p>On each tick: generators → script <code>tick</code> → bindings. Modbus writes validate the
 whole request, then run <code>on_write</code> and bindings before responding. Invalid write
 requests or failed write hooks roll back register changes. Partial register
@@ -696,8 +661,8 @@ Model read-only measurements may be changed internally but cannot be written by 
 <code>overwrite</code> permits the next tick to replace it. Scripts define their own write
 response and may deliberately overwrite values.</p>
 <h2 id="local-python-behaviors">Local Python behaviors<a class="headerlink" href="#local-python-behaviors" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">poetry run modsim --config contrib/advantech/adam-5017uh/adam-5017uh-slot-0.tm.json \
-  --scenario contrib/advantech/adam-5017uh/scripted.sim.json --allow-scripts
+<pre><code class="language-bash">uv run modsim --config examples/models/advantech/adam-5017uh/adam-5017uh.tm.json \
+  --scenario examples/models/advantech/adam-5017uh/simulation/adam-5017uh-scripted-analog-input.sim.json --allow-scripts
 </code></pre>
 <p>Optional synchronous hooks:</p>
 <pre><code class="language-python">def initialize(device):
@@ -715,12 +680,15 @@ def on_write(device, changes):
 <p>Use <code>get(name)</code>, <code>set(name, value)</code> and <code>set_many({...})</code>. Batch updates validate
 all values before changing cells. Hooks run on the server event loop and must not
 block; async hooks are rejected. Python is ordinary local code, enabled explicitly
-by <code>--allow-scripts</code>. Each device loads its own module instance. Runtime errors
-in periodic behavior stop the simulation and release its listener rather than
-silently serving stale values. SIGINT/SIGTERM cancel updates and close the server.</p>
+by <code>--allow-scripts</code>. Each device loads its own module instance. In single-device
+<code>--config</code> mode, periodic behavior errors stop the server. In managed mode, an
+error takes only that device offline and is reported by <code>ps</code>. SIGINT/SIGTERM
+cancel updates and close the server.</p>
 <p>The sample loopback is an explicit synthetic assumption, not a claim that real
 ADAM hardware automatically connects AO to AI or DO to DI. No fault injection,
 recording/replay, multi-listener runtime or remote behavior execution is included.</p>
+<p>Prepare pinned example inputs from the repository root with
+<code>uv run python tools/fetch-models.py</code>; see <code>examples/model-source.yaml</code>.</p>
 
 
 
