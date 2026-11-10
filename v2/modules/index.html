@@ -414,6 +414,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#modsim.main.privileged_port_hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        privileged_port_hint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modsim.main.require_bindable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        require_bindable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#modsim.main.run_async_server" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -601,6 +623,28 @@
     <span class="md-ellipsis">
       
         main
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modsim.main.privileged_port_hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        privileged_port_hint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modsim.main.require_bindable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        require_bindable
       
     </span>
   </a>
@@ -803,6 +847,82 @@
 <div class="doc doc-object doc-function">
 
 
+<h2 id="modsim.main.privileged_port_hint" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">privileged_port_hint</span><span class="p">(</span><span class="n">port</span><span class="p">)</span></code>
+
+<a href="#modsim.main.privileged_port_hint" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Explain how to listen on a port the operating system reserves.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>modsim/main.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">privileged_port_hint</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Explain how to listen on a port the operating system reserves."""</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"Port </span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2"> needs administrator rights on this system. Run the same "</span>
+        <span class="s1">'command with sudo; with uvx that is sudo "$(command -v uvx)" followed by '</span>
+        <span class="s2">"the rest of the command. Or listen on a port above 1023, for example "</span>
+        <span class="s2">"--port 5020, and point the client at it (modpoll --tcp-port 5020)."</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="modsim.main.require_bindable" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">require_bindable</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span></code>
+
+<a href="#modsim.main.require_bindable" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Fail early with a clear message when binding needs elevated rights.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>modsim/main.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">require_bindable</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Fail early with a clear message when binding needs elevated rights."""</span>
+    <span class="k">with</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span> <span class="k">as</span> <span class="n">probe</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">probe</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">port</span><span class="p">)))</span>
+        <span class="k">except</span> <span class="ne">PermissionError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="n">privileged_port_hint</span><span class="p">(</span><span class="n">port</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="c1"># Occupied ports and other failures are reported by the server itself.</span>
+            <span class="k">return</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="modsim.main.run_async_server" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">run_async_server</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></code>
 
@@ -819,30 +939,7 @@
 
             <details class="quote">
               <summary>Source code in <code>modsim/main.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">134</span>
 <span class="normal">135</span>
 <span class="normal">136</span>
 <span class="normal">137</span>
@@ -907,7 +1004,33 @@
 <span class="normal">196</span>
 <span class="normal">197</span>
 <span class="normal">198</span>
-<span class="normal">199</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async_server</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async_server</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Run server."""</span>
     <span class="n">txt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Start ASYNC server, listening on </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">comm</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
@@ -918,6 +1041,7 @@
             <span class="ow">or</span> <span class="p">(</span><span class="s2">"127.0.0.1"</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">"runtimes"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="s2">""</span><span class="p">),</span>
             <span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="n">require_bindable</span><span class="p">(</span><span class="n">address</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
         <span class="n">server</span> <span class="o">=</span> <span class="n">ModbusTcpServer</span><span class="p">(</span>
             <span class="n">context</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
             <span class="n">identity</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">identity</span><span class="p">,</span>
@@ -947,6 +1071,7 @@
         <span class="k">return</span> <span class="n">server</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">comm</span> <span class="o">==</span> <span class="s2">"udp"</span><span class="p">:</span>
         <span class="n">address</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"127.0.0.1"</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+        <span class="n">require_bindable</span><span class="p">(</span><span class="n">address</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
         <span class="n">server</span> <span class="o">=</span> <span class="n">ModbusUdpServer</span><span class="p">(</span>
             <span class="n">context</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
             <span class="n">identity</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">identity</span><span class="p">,</span>
@@ -972,6 +1097,7 @@
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">comm</span> <span class="o">==</span> <span class="s2">"tls"</span><span class="p">:</span>
         <span class="n">address</span> <span class="o">=</span> <span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+        <span class="n">require_bindable</span><span class="p">(</span><span class="n">address</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
         <span class="c1"># Create SSL context from cert and key files</span>
         <span class="n">sslctx</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">create_default_context</span><span class="p">(</span><span class="n">ssl</span><span class="o">.</span><span class="n">Purpose</span><span class="o">.</span><span class="n">CLIENT_AUTH</span><span class="p">)</span>
         <span class="n">sslctx</span><span class="o">.</span><span class="n">load_cert_chain</span><span class="p">(</span>
@@ -1017,8 +1143,7 @@
 
             <details class="quote">
               <summary>Source code in <code>modsim/main.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 30</span>
-<span class="normal"> 31</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 31</span>
 <span class="normal"> 32</span>
 <span class="normal"> 33</span>
 <span class="normal"> 34</span>
@@ -1095,7 +1220,8 @@
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
-<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">setup_server</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="normal">108</span>
+<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">setup_server</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Run server setup."""</span>
     <span class="c1"># The datastores only respond to the addresses that are initialized</span>
     <span class="c1"># If you initialize a DataBlock to addresses of 0x00 to 0xFF, a request to</span>
