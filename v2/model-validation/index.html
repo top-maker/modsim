@@ -373,10 +373,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#scenarios" class="md-nav__link">
+  <a href="#simulation-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scenarios
+        Simulation data
       
     </span>
   </a>
@@ -505,10 +505,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#scenarios" class="md-nav__link">
+  <a href="#simulation-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scenarios
+        Simulation data
       
     </span>
   </a>
@@ -551,9 +551,9 @@
 Install with <code>uv sync --all-groups</code>. Model parsing and TM instantiation belong to that
 shared package; Modsim owns state and protocol execution.</p>
 <h2 id="one-device">One device<a class="headerlink" href="#one-device" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">uv run modsim --config examples/models/advantech/adam-5017uh/adam-5017uh.tm.json \
+<pre><code class="language-bash">uv run modsim --config examples/models/products/advantech/adam-5017uh/model.tm.json \
   --unit-id 1 --port 5020 \
-  --scenario examples/models/advantech/adam-5017uh/simulation/adam-5017uh.sim.json
+  --data examples/models/products/advantech/adam-5017uh/model.sim.json
 </code></pre>
 <p>Without <code>--port</code>, the listener uses 502, which needs administrator rights on
 Linux and on macOS for <code>127.0.0.1</code>; modsim then explains how to rerun with sudo
@@ -590,11 +590,13 @@ contract, TM parameters, dynamic device lifecycle and TD export.
 The ADAM lab example starts two independent devices on one listener:</p>
 <pre><code class="language-bash">uv run modsim up -f examples/deployment.yaml
 </code></pre>
-<p>Paths in deployment files are relative to the deployment directory; scenario
-script paths are relative to the scenario file. Unit IDs and TD identities must
+<p>Paths in deployment files, including data and script paths, are relative to the
+deployment directory. Unit IDs and TD identities must
 be unique. Unknown addresses or Unit IDs never inherit another device's state.</p>
-<h2 id="scenarios">Scenarios<a class="headerlink" href="#scenarios" title="Permanent link">&para;</a></h2>
-<p>Version <code>"1"</code> fields:</p>
+<h2 id="simulation-data">Simulation data<a class="headerlink" href="#simulation-data" title="Permanent link">&para;</a></h2>
+<p><code>--data</code> takes a local path or HTTPS URL of simulation data, defined by
+<a href="https://github.com/top-maker/modpoll-wot/blob/main/profile.md#simulation-data">modpoll-wot</a>.
+Version <code>"1"</code> fields:</p>
 <table>
 <thead>
 <tr>
@@ -605,7 +607,7 @@ be unique. Unknown addresses or Unit IDs never inherit another device's state.</
 <tbody>
 <tr>
 <td><code>initial</code></td>
-<td>Property-name/value overrides</td>
+<td>Property-name/value static values, the default</td>
 </tr>
 <tr>
 <td><code>tick</code></td>
@@ -627,16 +629,14 @@ be unique. Unknown addresses or Unit IDs never inherit another device's state.</
 <td><code>writePolicy</code></td>
 <td><code>hold</code> (default) or <code>overwrite</code> for generated properties</td>
 </tr>
-<tr>
-<td><code>script</code></td>
-<td>Local Python file</td>
-</tr>
-<tr>
-<td><code>parameters</code></td>
-<td>Script values exposed as <code>device.parameters</code></td>
-</tr>
 </tbody>
 </table>
+<p>Simulation data carries no code. A modpoll <code>--export</code> snapshot is accepted as
+well: the entry titled like the model, or the only entry, becomes <code>initial</code>;
+points modpoll could not read (<code>null</code>) keep their defaults and are logged.
+Scaled values are accepted when they are exact decimal multiples of the
+multiplier or exactly the float modpoll exports, so a snapshot replays
+unchanged.</p>
 <p>Generators: <code>constant</code> (<code>value</code>); <code>sine</code> (<code>center</code>, <code>amplitude</code>, positive <code>period</code>);
 <code>ramp</code> (<code>start</code>, <code>rate</code>, <code>minimum</code>, <code>maximum</code>, clamped to bounds);
 <code>noise</code> (<code>minimum</code>, <code>maximum</code>, uniform seeded noise). Integer-property noise
@@ -645,9 +645,8 @@ Numeric generators round to the nearest integer for integer model properties.
 Boolean channels can use constant values, bindings or scripts. All updates must
 satisfy the model's schema and raw encoding bounds. Unknown properties are errors.
 Binding chains and cycles are rejected; use a script for ordered dependencies.</p>
-<p>Initialization order: model defaults/type fallback → scenario initial →
-CLI initial → script <code>initialize</code> → first dynamic update at elapsed 0.
-<code>--initial</code> and <code>--initial-file</code> remain available for single-device runs.
+<p>Initialization order: model defaults/type fallback → data <code>initial</code> →
+CLI <code>--initial</code> → script <code>initialize</code> → first dynamic update at elapsed 0.
 Single-device startup logs include the final initialized values; raw values are
 synthetic unless the contribution explicitly documents their source.</p>
 <p>On each tick: generators → script <code>tick</code> → bindings. Modbus writes validate the
@@ -664,8 +663,8 @@ Model read-only measurements may be changed internally but cannot be written by 
 <code>overwrite</code> permits the next tick to replace it. Scripts define their own write
 response and may deliberately overwrite values.</p>
 <h2 id="local-python-behaviors">Local Python behaviors<a class="headerlink" href="#local-python-behaviors" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">uv run modsim --config examples/models/advantech/adam-5017uh/adam-5017uh.tm.json \
-  --scenario examples/models/advantech/adam-5017uh/simulation/adam-5017uh-scripted-analog-input.sim.json --allow-scripts
+<pre><code class="language-bash">uv run modsim --config examples/models/products/advantech/adam-5017uh/model.tm.json \
+  --script behavior.py --allow-scripts
 </code></pre>
 <p>Optional synchronous hooks:</p>
 <pre><code class="language-python">def initialize(device):
