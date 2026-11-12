@@ -81,9 +81,23 @@ def serve_and_read(tmp_path, model, data, name):
     env = {**os.environ, "PYTHONPATH": str(ROOT)}
     with (tmp_path / f"{name}.log").open("w+") as log:
         server = subprocess.Popen(
-            [sys.executable, "-m", "modsim", "--config", str(model), "--data",
-             str(data), "--bind", "127.0.0.1", "--port", str(port)],
-            cwd=tmp_path, env=env, stdout=log, stderr=log,
+            [
+                sys.executable,
+                "-m",
+                "modsim",
+                "--config",
+                str(model),
+                "--data",
+                str(data),
+                "--bind",
+                "127.0.0.1",
+                "--port",
+                str(port),
+            ],
+            cwd=tmp_path,
+            env=env,
+            stdout=log,
+            stderr=log,
         )
         try:
             deadline = time.monotonic() + 30
@@ -99,9 +113,23 @@ def serve_and_read(tmp_path, model, data, name):
                     time.sleep(0.1)
             snapshot = tmp_path / f"{name}.snapshot.json"
             subprocess.run(
-                [MODPOLL, "-m", "modpoll", "--config", str(model), "--tcp", "127.0.0.1",
-                 "--tcp-port", str(port), "--once", "--export", str(snapshot)],
-                check=True, capture_output=True, timeout=60,
+                [
+                    MODPOLL,
+                    "-m",
+                    "modpoll",
+                    "--config",
+                    str(model),
+                    "--tcp",
+                    "127.0.0.1",
+                    "--tcp-port",
+                    str(port),
+                    "--once",
+                    "--export",
+                    str(snapshot),
+                ],
+                check=True,
+                capture_output=True,
+                timeout=60,
             )
             return snapshot
         finally:
