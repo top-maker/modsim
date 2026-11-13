@@ -63,3 +63,7 @@ markers = ["integration: local protocol integration test"]
 
 [project.scripts]
 modsim = "modsim.main:app"
+
+[tool.deptry.per_rule_ignores]
+# pymodbus imports pyserial for its serial transport; modsim never imports it itself.
+DEP002 = ["pyserial"]
