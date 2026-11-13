@@ -555,7 +555,7 @@ shared package; Modsim owns state and protocol execution.</p>
   --unit-id 1 --port 5020 \
   --data examples/models/products/advantech/adam-5017uh/model.sim.json
 </code></pre>
-<p>Without <code>--port</code>, the listener uses 502, which needs administrator rights on
+<p>Without <code>--port</code>, the listener uses 5020; port 502 needs administrator rights on
 Linux and on macOS for <code>127.0.0.1</code>; modsim then explains how to rerun with sudo
 or choose a port above 1023.</p>
 <p><code>--config</code> also accepts HTTPS model URLs. GitHub <code>blob</code> links are converted to
