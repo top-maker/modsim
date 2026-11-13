@@ -199,7 +199,26 @@ administrators: to listen on the standard port 502, run the command with sudo
 (with uvx, `sudo "$(command -v uvx)" modsim --port 502 ...`). modsim prints the
 same hint when a port is refused. Windows does not reserve these ports.
 
-The single-device model runtime currently supports TCP. The unconfigured demo
+### Modbus RTU
+
+`--serial pty` simulates a Modbus RTU device without hardware (Linux and macOS).
+modsim creates a virtual serial cable, prints the port for the client and the
+matching modpoll command, and removes it on exit:
+
+```bash
+modsim --config device.tm.json --serial pty
+# Virtual serial port for the client: /dev/pts/7
+# Read it with: modpoll --config device.tm.json --serial /dev/pts/7 --serial-baud 9600
+```
+
+Virtual ports ignore baud rate and parity, so `--serial-baud` and `--serial-parity`
+only shape the printed command. `--serial-link PATH` adds a fixed symbolic link to
+the client port. Pass a port name instead of `pty` to listen on an existing serial
+port with those settings. Windows has no pseudo-terminals: create a virtual serial
+pair with a driver such as com0com, listen on one port with `--serial COM5` and
+connect the client to the other. `--serial` and `--port` are mutually exclusive.
+
+The single-device model runtime currently supports TCP and Modbus RTU. The unconfigured demo
 also supports TCP, UDP, TLS, RTU and ASCII; its datastore is shared by all Unit
 IDs. TLS loads `certificates/pymodbus.crt` and `certificates/pymodbus.key` from
 the working directory. See [transport details](docs/site/index.md#unconfigured-demo).
