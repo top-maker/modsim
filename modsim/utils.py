@@ -10,6 +10,9 @@ from pymodbus.framer import (
 
 from . import __version__
 
+# Above 1023, so the first command needs no administrator rights.
+DEFAULT_PORT = 5020
+
 config: Dict[str, Any] = {}
 
 
@@ -69,7 +72,7 @@ def get_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--port",
-        help="set port; defaults to 502 for TCP and UDP and 802 for TLS",
+        help="set port; defaults to 5020, which needs no administrator rights",
         type=str,
     )
     parser.add_argument(
@@ -132,10 +135,10 @@ def get_commandline() -> argparse.Namespace:
 
     # set defaults
     comm_defaults: Dict[str, list] = {
-        "tcp": ["socket", 502],
-        "udp": ["socket", 502],
+        "tcp": ["socket", DEFAULT_PORT],
+        "udp": ["socket", DEFAULT_PORT],
         "serial": ["rtu", "/dev/ptyp0"],
-        "tls": ["tls", 802],
+        "tls": ["tls", DEFAULT_PORT],
     }
     framers: Dict[str, Any] = {
         "ascii": FramerType.ASCII,

@@ -430,11 +430,12 @@ def test_privileged_port_reports_how_to_run(monkeypatch):
     assert "--port 5020" in message
 
 
-def test_default_tcp_port_is_502(monkeypatch):
+@pytest.mark.parametrize("comm", ["tcp", "udp", "tls"])
+def test_default_port_is_5020(monkeypatch, comm):
     from modsim.utils import get_commandline
 
-    monkeypatch.setattr(sys, "argv", ["modsim"])
-    assert get_commandline().port == 502
+    monkeypatch.setattr(sys, "argv", ["modsim", "--comm", comm])
+    assert get_commandline().port == 5020
 
 
 def _unprivileged_low_ports():
@@ -452,9 +453,9 @@ def _unprivileged_low_ports():
     or _unprivileged_low_ports(),
     reason="needs a non-root Linux user without access to port 502",
 )
-def test_default_port_without_rights_fails_with_hint():
+def test_privileged_port_without_rights_fails_with_hint():
     result = subprocess.run(
-        [sys.executable, "-m", "modsim", "--log", "error"],
+        [sys.executable, "-m", "modsim", "--log", "error", "--port", "502"],
         capture_output=True,
         text=True,
         timeout=5,

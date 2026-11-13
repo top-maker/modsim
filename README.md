@@ -192,12 +192,12 @@ modpoll --config device.tm.json --tcp 192.168.1.10 --once --export snapshot.json
 uv run modsim --config device.tm.json --port 5020 --data snapshot.json
 ```
 
-Without `--port`, modsim listens on 502, the standard Modbus TCP port, so
-`modpoll --tcp 127.0.0.1` reaches it without `--tcp-port`. Linux, and macOS
-when binding to `127.0.0.1`, reserve ports below 1024 for administrators: run
-the command with sudo (with uvx, `sudo "$(command -v uvx)" modsim ...`) or pass
-`--port 5020` and read it with `modpoll --tcp-port 5020`. modsim prints the same
-hint when the port is refused. Windows does not reserve these ports.
+Without `--port`, modsim listens on 5020 so the first command needs no
+administrator rights; read it with `modpoll --tcp 127.0.0.1 --tcp-port 5020`.
+Linux, and macOS when binding to `127.0.0.1`, reserve ports below 1024 for
+administrators: to listen on the standard port 502, run the command with sudo
+(with uvx, `sudo "$(command -v uvx)" modsim --port 502 ...`). modsim prints the
+same hint when a port is refused. Windows does not reserve these ports.
 
 The single-device model runtime currently supports TCP. The unconfigured demo
 also supports TCP, UDP, TLS, RTU and ASCII; its datastore is shared by all Unit
