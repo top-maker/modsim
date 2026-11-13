@@ -505,8 +505,15 @@ def test_serial_transport_passes_port_framer_and_datastore(monkeypatch):
     monkeypatch.setattr(
         sys,
         "argv",
-        ["modsim", "--serial", "/dev/modsim-test", "--serial-baud", "19200",
-         "--serial-parity", "even"],
+        [
+            "modsim",
+            "--serial",
+            "/dev/modsim-test",
+            "--serial-baud",
+            "19200",
+            "--serial-parity",
+            "even",
+        ],
     )
     args = get_commandline()
     main.setup_server(args)

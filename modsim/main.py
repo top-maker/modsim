@@ -158,7 +158,7 @@ async def serve_serial(args: Any) -> None:
         if getattr(args, "serial_link", None):
             _logger.info("Also linked as %s", args.serial_link)
         _logger.info("Read it with: %s", read_command(args, pair.client_port))
-    server = ModbusSerialServer(
+    server: Any = ModbusSerialServer(
         context=args.context,
         identity=args.identity,
         port=port,
@@ -175,7 +175,8 @@ async def serve_serial(args: Any) -> None:
         if not await server.listen():
             raise OSError("Could not open serial port %s" % port)
         tasks = [
-            asyncio.create_task(device.run()) for device in getattr(args, "runtimes", [])
+            asyncio.create_task(device.run())
+            for device in getattr(args, "runtimes", [])
         ]
         await asyncio.gather(server.serving, *tasks)
     finally:

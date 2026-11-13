@@ -34,14 +34,12 @@ class VirtualSerialPair:
         self._loop: Optional[asyncio.AbstractEventLoop] = None
 
     def open(self, loop: asyncio.AbstractEventLoop) -> None:
+        if not available():
+            raise OSError("virtual serial ports are not available on Windows")
         import pty
         import tty
 
-        if not available():
-            raise OSError("virtual serial ports are not available on Windows")
-        if self._link is not None and (
-            self._link.exists() or self._link.is_symlink()
-        ):
+        if self._link is not None and (self._link.exists() or self._link.is_symlink()):
             if not self._link.is_symlink():
                 raise ValueError(f"--serial-link {self._link} exists and is not a link")
             self._link.unlink()

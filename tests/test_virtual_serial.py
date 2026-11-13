@@ -27,9 +27,23 @@ def _start(tmp_path, *extra):
     )
     log = (tmp_path / "server.log").open("w+")
     process = subprocess.Popen(
-        [sys.executable, "-m", "modsim", "--config", str(MODEL), "--unit-id", "1",
-         "--data", str(data), "--serial", "pty", *extra],
-        cwd=tmp_path, stdout=log, stderr=log,
+        [
+            sys.executable,
+            "-m",
+            "modsim",
+            "--config",
+            str(MODEL),
+            "--unit-id",
+            "1",
+            "--data",
+            str(data),
+            "--serial",
+            "pty",
+            *extra,
+        ],
+        cwd=tmp_path,
+        stdout=log,
+        stderr=log,
     )
     deadline = time.monotonic() + 30
     while time.monotonic() < deadline:

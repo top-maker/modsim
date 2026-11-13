@@ -133,7 +133,9 @@ def get_commandline() -> argparse.Namespace:
     if args.comm != "serial" and (
         args.serial_baud or args.serial_parity or args.serial_link
     ):
-        parser.error("--serial-baud, --serial-parity and --serial-link require --serial")
+        parser.error(
+            "--serial-baud, --serial-parity and --serial-link require --serial"
+        )
     if args.serial_link and args.serial != "pty":
         parser.error("--serial-link requires --serial pty")
     if args.serial == "pty" and not virtual_serial.available():
