@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/top-maker/modsim/compare/v1.0.1...v1.0.2) (2026-11-14)
+
+
+### Documentation
+
+* point to the modpoll repository, where development continues ([#38](https://github.com/top-maker/modsim/issues/38)) ([fbd34c1](https://github.com/top-maker/modsim/commit/fbd34c1abfa2dca483c536d46ce730067eab468b))
+
 ## [1.0.1](https://github.com/top-maker/modsim/compare/v1.0.0...v1.0.1) (2026-10-28)
 
 
