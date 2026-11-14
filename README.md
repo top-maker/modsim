@@ -1,3 +1,9 @@
+> **This repository has moved.** modsim 2.x is developed in the
+> [modpoll repository](https://github.com/top-maker/modpoll/tree/v2/packages/modsim) (`packages/modsim` on
+> branch `v2`), together with modpoll and modpoll-wot, and released from there to
+> [PyPI](https://pypi.org/project/modsim/) with tags `modsim-v<version>`. This repository is archived; its
+> 1.x history and tags stay here, and the 2.x history up to 2.0.0a12 was carried over.
+
 # ModSim - A Simple Modbus TCP Device Simulator
 
 *modsim* is a Modbus device simulator that can run locally or in a container. A public simulator is available at `modsim.topmaker.net:502` for quick testing.
